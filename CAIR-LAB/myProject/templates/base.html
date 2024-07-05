@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAIR LAB | KLETCH University</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background-color: #ffffff; /* Set the background color to white */
+        }
+        .navbar-nav .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0; /* Adjust this based on your design */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            backdrop-filter: blur(10px); /* Blur effect */
+            border: 1px solid #ccc; /* Border color and width */
+            border-radius: 5px; /* Border radius */
+        }
+        .navbar-nav .dropdown-menu {
+            border: none; /* Remove border if needed */
+        }
+        .dropdown-item img {
+            height: 20px;
+            width: 20px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">
+                <img src="{% static 'photos/logo1.png' %}" alt="Logo" style="height: 40px;"> 
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Research Domain
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="/AIML"><img src="{% static 'photos/EdgeAI.jpeg' %}" alt="EDGE-AI Logo"> EDGE-AI</a></li>
+                          <li><a class="dropdown-item" href="/HPC"><img src="{% static 'photos/hpcnew.png' %}" alt="HPC Logo"> HPC</a></li>
+                          <li><a class="dropdown-item" href="/CLOUD"><img src="{% static 'photos/cloud.jpeg' %}" alt="CLOUD Logo"> CLOUD</a></li>
+                          <li><a class="dropdown-item" href="/DATASCIENCE"><img src="{% static 'photos/datasciencenew.png' %}" alt="DATA SCIENCE Logo"> DATA SCIENCE</a></li>
+                        </ul>
+                      </li>
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/FacultyLogin">Faculty Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% if messages %}  
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <!-- Main Content -->
+    <div class="container mt-4">
+        {% block body %} {% endblock body %}
+    </div>
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/particles.min.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    <script>
+        particlesJS.load('particles-js', '{% static "js/particles.json" %}', function() {
+            console.log('particles.js loaded - callback');
+        });
+    </script>
+</body>
+</html>
+
+

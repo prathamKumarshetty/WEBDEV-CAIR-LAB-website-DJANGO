@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block body %} 
+
+<style>
+    /* CSS styles for the h3 element */
+    h3 {
+        color: #333; /* Text color */
+        font-family: Arial, sans-serif; /* Font family */
+        font-size: 24px; /* Font size */
+        text-align: center; /* Text alignment */
+        margin-top: 20px; /* Top margin */
+        margin-bottom: 20px; /* Bottom margin */
+    }
+</style>
+<div class='container-fluid px-0'>
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://source.unsplash.com/1200x400/?phone,contact" class="d-block w-100 mx-0" alt="...">
+                <h3 class='text-center'>Contact us</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class='container my-3 py-2 text-align-centre'>
+    <form id="contactForm" method="post" action="/contact">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name='name' placeholder="Enter your name">
+            <div id="nameError" class="error text-danger"></div>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" name='email' placeholder="Enter your email">
+            <div id="emailError" class="error text-danger"></div>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" name='phone' placeholder="Enter your phone no">
+            <div id="phoneError" class="error text-danger"></div>
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label">Description</label>
+            <textarea class="form-control" id="desc" name='desc' rows="3" placeholder="Enter your description here..."></textarea>
+            <div id="descError" class="error text-danger"></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        let valid = true;
+
+        // Validate Name
+        const nameField = document.getElementById('name');
+        if (nameField.value.trim() === '' || /\d/.test(nameField.value)) {
+            valid = false;
+            document.getElementById('nameError').textContent = 'Please enter a valid name without numbers.';
+            nameField.style.borderColor = 'red';
+        } else {
+            document.getElementById('nameError').textContent = '';
+            nameField.style.borderColor = '';
+        }
+
+        // Validate Email
+        const emailField = document.getElementById('email');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(emailField.value)) {
+            valid = false;
+            document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+            emailField.style.borderColor = 'red';
+        } else {
+            document.getElementById('emailError').textContent = '';
+            emailField.style.borderColor = '';
+        }
+
+        // Validate Phone Number
+        const phoneField = document.getElementById('phone');
+        const phonePattern = /^\d{10}$/; // Assuming 10 digit phone number
+        if (!phonePattern.test(phoneField.value)) {
+            valid = false;
+            document.getElementById('phoneError').textContent = 'Please enter a valid 10 digit phone number.';
+            phoneField.style.borderColor = 'red';
+        } else {
+            document.getElementById('phoneError').textContent = '';
+            phoneField.style.borderColor = '';
+        }
+
+        // Validate Description
+        const descField = document.getElementById('desc');
+        if (descField.value.trim() === '') {
+            valid = false;
+            document.getElementById('descError').textContent = 'Please enter a description.';
+            descField.style.borderColor = 'red';
+        } else {
+            document.getElementById('descError').textContent = '';
+            descField.style.borderColor = '';
+        }
+
+        if (!valid) {
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+</script>
+
+{% endblock body %}

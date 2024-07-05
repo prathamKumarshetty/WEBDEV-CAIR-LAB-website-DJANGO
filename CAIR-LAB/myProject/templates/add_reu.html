@@ -1,0 +1,208 @@
+{% extends 'faculty_home.html' %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .form-section, .selected-section {
+            flex: 1;
+            margin: 0 10px;
+        }
+        .form-section h1 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        .form-section label {
+            display: block;
+            margin-bottom: 5px;
+            color: #343a40;
+        }
+        .form-section input[type="text"],
+        .form-section input[type="file"],
+        .form-section input[type="number"],
+        .form-section input[type="url"],
+        .form-section input[type="tel"],
+        .form-section select,
+        .form-section textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-section .checkbox-container {
+            display: flex;
+            flex-direction: column;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .form-section .checkbox-container label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .form-section .checkbox-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .form-section button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .form-section button:hover {
+            background-color: #0056b3;
+        }
+        .search-box {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .selected-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .selected-container h4 {
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        .selected-list {
+            list-style: none;
+            padding: 0;
+        }
+        .selected-list li {
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+
+    <div class="form-container">
+        <div class="form-section">
+            <h1>Add REU</h1>
+            <form id="reuForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                
+                <div class="form-group">
+                    {{ form.guide_name.label_tag }} {{ form.guide_name }}
+                </div>
+                <div class="form-group">
+                    {{ form.co_guide_name.label_tag }} {{ form.co_guide_name }}
+                </div>
+                <div class="form-group">
+                    {{ form.name_of_the_student.label_tag }} {{ form.name_of_the_student }}
+                </div>
+                <div class="form-group">
+                    {{ form.SRN.label_tag }} {{ form.SRN }}
+                </div>
+                <div class="form-group">
+                    {{ form.REU_topic.label_tag }} {{ form.REU_topic }}
+                </div>
+                <div class="form-group">
+                    {{ form.year.label_tag }} {{ form.year }}
+                </div>
+                <div class="form-group">
+                    {{ form.Student_id.label_tag }} {{ form.Student_id }}
+                </div>
+                <div class="form-group">
+                    {{ form.Faculty_id.label_tag }} {{ form.Faculty_id }}
+                </div>
+                <div class="form-group">
+                    {{ form.RU_domain.label_tag }} {{ form.RU_domain }}
+                </div>
+                <div class="form-group">
+                    {{ form.phone_number.label_tag }} {{ form.phone_number }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Add REU</button>
+            </form>
+            <div id="errorMessage" class="error"></div>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('reuForm').addEventListener('submit', function(event) {
+            let valid = true;
+            let errorMessage = '';
+            const nameFields = ['guide_name', 'co_guide_name', 'name_of_the_student'];
+            const yearField = document.querySelector('input[name="year"]');
+            const phoneField = document.querySelector('input[name="phone_number"]');
+            const currentYear = new Date().getFullYear();
+
+            // Validate name fields to ensure they do not contain numbers
+            nameFields.forEach(field => {
+                const fieldElement = document.querySelector(`input[name="${field}"]`);
+                const fieldValue = fieldElement.value;
+                if (/\d/.test(fieldValue)) {
+                    valid = false;
+                    errorMessage = 'Names cannot contain numbers.';
+                    fieldElement.style.borderColor = 'red';
+                } else {
+                    fieldElement.style.borderColor = '#ccc';
+                }
+            });
+
+            // Validate year field to ensure it is within a reasonable range
+            if (yearField.value < 1900 || yearField.value > currentYear) {
+                valid = false;
+                errorMessage = 'Please enter a valid year.';
+                yearField.style.borderColor = 'red';
+            } else {
+                yearField.style.borderColor = '#ccc';
+            }
+
+            // Validate phone number format
+            const phonePattern = /^\d{10}$/;
+            if (!phonePattern.test(phoneField.value)) {
+                valid = false;
+                errorMessage = 'Please enter a valid 10-digit phone number.';
+                phoneField.style.borderColor = 'red';
+            } else {
+                phoneField.style.borderColor = '#ccc';
+            }
+
+            if (!valid) {
+                event.preventDefault(); // Prevent form submission
+                document.getElementById('errorMessage').textContent = errorMessage;
+            } else {
+                document.getElementById('errorMessage').textContent = '';
+            }
+        });
+    </script>
+{% endblock %}

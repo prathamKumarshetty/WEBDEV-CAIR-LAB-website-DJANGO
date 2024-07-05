@@ -1,0 +1,55 @@
+{% extends "AIML.html" %}
+{% load static %}
+{% block EDGE-AI %}
+
+<div class="container py-4">
+  <!-- Search Form -->
+  <form class="mb-4" method="get" action="{% url 'REU' %}">
+    <div class="input-group mb-3">
+      <input type="text" name="query" class="form-control" placeholder="Search REU details">
+      <select name="year" class="form-select">
+        <option value="">Select Year</option>
+        {% for yr in years %}
+        <option value="{{ yr }}">{{ yr }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <!-- Results Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+
+          <th>SL.no</th>
+          <th>Year</th>
+          <th>Guide Name</th>
+          <th>Co-Guide Name</th>
+          <th>Student Name</th>
+          <th>SRN</th>
+          <th>REU Topic</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in results %}
+        <tr>
+          
+          <td>{{ forloop.counter }}</td>
+          <td>{{ result.year }}</td>
+          <td>{{ result.guide_name }}</td>
+          <td>{{ result.co_guide_name }}</td>
+          <td>{{ result.name_of_the_student }}</td>
+          <td>{{ result.SRN }}</td>
+          <td>{{ result.REU_topic }}</td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock EDGE-AI %}

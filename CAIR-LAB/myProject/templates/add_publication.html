@@ -1,0 +1,222 @@
+{% extends 'faculty_home.html' %}
+
+{% block content %}
+    <style>
+        .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .form-section, .selected-section {
+            flex: 1;
+            margin: 0 10px;
+        }
+        .form-section h3 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        .form-section label {
+            display: block;
+            margin-bottom: 5px;
+            color: #343a40;
+        }
+        .form-section input[type="text"],
+        .form-section input[type="file"],
+        .form-section input[type="number"],
+        .form-section input[type="url"],
+        .form-section select,
+        .form-section textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-section .checkbox-container {
+            display: flex;
+            flex-direction: column;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .form-section .checkbox-container label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .form-section .checkbox-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .form-section button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .form-section button:hover {
+            background-color: #0056b3;
+        }
+        .search-box {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .selected-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .selected-container h4 {
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        .selected-list {
+            list-style: none;
+            padding: 0;
+        }
+        .selected-list li {
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+    </style>
+
+    <div class="form-container">
+        <div class="form-section">
+            <h3>Add New Publication</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="form-group">
+                    {{ form.Publication_name.label_tag }} {{ form.Publication_name }}
+                </div>
+                <div class="form-group">
+                    {{ form.Publication_scopus.label_tag }} {{ form.Publication_scopus }}
+                </div>
+                <div class="form-group">
+                    {{ form.Publication_quartile.label_tag }} {{ form.Publication_quartile }}
+                </div>
+                <div class="form-group">
+                    {{ form.Publication_pdf.label_tag }} {{ form.Publication_pdf }}
+                </div>
+                <div class="form-group">
+                    {{ form.Publication_type.label_tag }} {{ form.Publication_type }}
+                </div>
+                <div class="form-group">
+                    {{ form.Publication_field.label_tag }} {{ form.Publication_field }}
+                </div>
+                <div class="form-group">
+                    {{ form.Publication_domain.label_tag }} {{ form.Publication_domain }}
+                </div>
+                <div class="form-group">
+                    {{ form.paper_link.label_tag }} {{ form.paper_link }}
+                </div>
+                <div class="form-group">
+                    {{ form.code_link.label_tag }} {{ form.code_link }}
+                </div>
+                <div class="form-group">
+                    {{ form.year.label_tag }} {{ form.year }}
+                </div>
+                <div class="form-group">
+                    {{ form.Publication_arch_image.label_tag }} {{ form.Publication_arch_image }}
+                </div>
+
+                <div class="form-group">
+                    <label for="faculty-search">Search Faculty:</label>
+                    <input type="text" id="faculty-search" class="search-box" placeholder="Search faculty...">
+                    {{ form.faculty_authors.label_tag }}
+                    <div class="checkbox-container" id="faculty-checkbox-container">
+                        {% for checkbox in form.faculty_authors %}
+                            <label>{{ checkbox.tag }} {{ checkbox.choice_label }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="student-search">Search Students:</label>
+                    <input type="text" id="student-search" class="search-box" placeholder="Search students...">
+                    {{ form.student_authors.label_tag }}
+                    <div class="checkbox-container" id="student-checkbox-container">
+                        {% for checkbox in form.student_authors %}
+                            <label>{{ checkbox.tag }} {{ checkbox.choice_label }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+        <div class="selected-section">
+            <div class="selected-container">
+                <h4>Selected Faculty:</h4>
+                <ul id="selected-faculty" class="selected-list"></ul>
+                <h4>Selected Students:</h4>
+                <ul id="selected-students" class="selected-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const facultySearch = document.getElementById('faculty-search');
+            const facultyContainer = document.getElementById('faculty-checkbox-container');
+            const studentSearch = document.getElementById('student-search');
+            const studentContainer = document.getElementById('student-checkbox-container');
+            const selectedFaculty = document.getElementById('selected-faculty');
+            const selectedStudents = document.getElementById('selected-students');
+
+            facultySearch.addEventListener('input', function() {
+                const searchQuery = facultySearch.value.toLowerCase();
+                const facultyLabels = facultyContainer.getElementsByTagName('label');
+                Array.from(facultyLabels).forEach(function(label) {
+                    const text = label.textContent.toLowerCase();
+                    label.style.display = text.includes(searchQuery) ? '' : 'none';
+                });
+            });
+
+            studentSearch.addEventListener('input', function() {
+                const searchQuery = studentSearch.value.toLowerCase();
+                const studentLabels = studentContainer.getElementsByTagName('label');
+                Array.from(studentLabels).forEach(function(label) {
+                    const text = label.textContent.toLowerCase();
+                    label.style.display = text.includes(searchQuery) ? '' : 'none';
+                });
+            });
+
+            function updateSelectedList(container, list) {
+                container.innerHTML = '';
+                const checkboxes = list.querySelectorAll('input[type="checkbox"]:checked');
+                checkboxes.forEach(function(checkbox) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = checkbox.parentElement.textContent.trim();
+                    container.appendChild(listItem);
+                });
+            }
+
+            facultyContainer.addEventListener('change', function() {
+                updateSelectedList(selectedFaculty, facultyContainer);
+            });
+
+            studentContainer.addEventListener('change', function() {
+                updateSelectedList(selectedStudents, studentContainer);
+            });
+        });
+    </script>
+{% endblock %}

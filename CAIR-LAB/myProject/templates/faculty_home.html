@@ -1,0 +1,161 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .navbar .logo-container {
+            background-color: #f8f9fa; /* Match the logo background color */
+            padding: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .navbar .logo-container img {
+            max-height: 50px; /* Adjust as needed */
+        }
+        .navbar .nav-links {
+            width: 100%;
+            background-color: #343434; /* Adjust the color as needed */
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        .navbar .nav-links a {
+            color: #ffffff;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .navbar .nav-links a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #f1f1f1;
+            position: fixed;
+            top: 130px; /* Adjust based on navbar height */
+            left: 15px;
+            height: 100%;
+            padding-top: 20px;
+        }
+        .sidebar .activity {
+            padding: 10px 15px;
+            font-size: 18px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+        .sidebar .activity time {
+            font-size: 12px;
+            color: #999;
+            display: block;
+        }
+        .content {
+            margin-left: 220px; /* Adjust based on sidebar width */
+            padding: 20px;
+            margin-top: 130px; /* Adjust based on navbar height */
+        }
+        .content h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .content p {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .content .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .content .btn-primary {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+        }
+        .content .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .content .btn-secondary {
+            background-color: #6c757d;
+            color: #ffffff;
+            border: none;
+        }
+        .content .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .content img {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="{% static 'photos/logo1.png' %}" alt="Logo">
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'add_publication' %}">Add Publication</a>
+            <a href="{% url 'add_student' %}">Add Student</a>
+            <a href="{% url 'add_reu' %}">Add REU</a>
+            <a href="{% url 'FacultyRegister' %}">Register New Faculty</a>
+            <a href="{% url 'view_page' %}">View Page</a> <!-- Added "View Page" link -->
+            <a href="{% url 'faculty_logout' %}" class="btn-secondary">Log Out</a>
+            <a href="{% url 'faculty_logout_admin' %}">Admin</a> <!-- Added link to Django admin -->
+        </div>
+    </div>
+    <div class="sidebar">
+        <h1>Recent Activities</h1>
+        {% if recent_activities %}
+            {% for activity in recent_activities %}
+                <div class="activity">
+                    <strong>{{ activity.activity_type }}</strong>
+                    <time>{{ activity.timestamp }}</time>
+                    <p>{{ activity.description }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="activity">
+                <p>No recent activities available.</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="content">
+        {% block content %}
+        <h1>Welcome, Prof. {{ user.username }}</h1>
+        <p>You can manage your publications, students, and REU entries here.</p>
+        {% endblock %}
+    </div>
+</body>
+</html>

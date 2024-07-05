@@ -1,0 +1,81 @@
+{% extends "AIML.html" %}
+{% load static %}
+{% block EDGE-AI %}
+
+<div class="container py-4">
+  <!-- Page Header -->
+  <div class="text-center mb-4">
+    <h1>Publications</h1>
+    <p class="text-muted">#Where pixels inspires brilliance</p>
+  </div>
+
+  <!-- Search Form -->
+  <form class="mb-4" method="get" action="{% url 'PUBLICATIONS' %}">
+    <div class="input-group mb-3">
+      <input type="text" name="query" class="form-control" placeholder="Search publications or authors">
+      <select name="year" class="form-select mx-2">
+        <option value="">Select Year</option>
+        {% for yr in years %}
+        <option value="{{ yr }}">{{ yr }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <!-- Publications List -->
+  <div class="row">
+    {% for publication in publications %}
+    <div class="col-md-12 mb-4">
+      <div class="card publication-card">
+        <div class="card-body">
+          <h5 class="card-title">{{ publication.Publication_name }}</h5>
+          <p class="card-text">
+            <strong>Faculty Authors:</strong> {% for faculty in publication.faculty_authors.all %}{{ faculty.Faculty_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          </p>
+          <p class="card-text">
+            <strong>Student Authors:</strong> {% for student in publication.student_authors.all %}{{ student.Student_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          </p>
+          <p class="card-text">
+            <strong>Quartile:</strong> {{ publication.Publication_quartile }}
+          </p>
+          <p class="card-text">
+            <a href="{{ publication.paper_link }}" target="_blank" class="btn btn-link">Paper</a>
+            <a href="{{ publication.code_link }}" target="_blank" class="btn btn-link">Code</a>
+            <a href="{{ publication.Publication_pdf.url }}" target="_blank" class="btn btn-link">PDF</a>
+          </p>
+          <p class="card-text"><small class="text-muted">{{ publication.year }}</small></p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .publication-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  .publication-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  .publication-card .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .publication-card .card-text {
+    margin-bottom: 1rem;
+  }
+  .publication-card .btn-link {
+    color: #007bff;
+    text-decoration: none;
+  }
+  .publication-card .btn-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+{% endblock EDGE-AI %}

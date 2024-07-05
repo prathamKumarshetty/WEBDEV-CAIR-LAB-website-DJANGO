@@ -1,0 +1,76 @@
+{% extends "AIML.html" %}
+{% load static %}
+{% block EDGE-AI %}
+
+<div class="container py-4">
+  <!-- Page Header -->
+  <div class="text-center mb-4">
+    <h1>Publications Analysis</h1>
+    
+  </div>
+
+  <!-- Search Form -->
+  <form class="mb-4" method="get" action="{% url 'analysis' %}">
+    <div class="input-group mb-3">
+      <select name="year" class="form-select mx-2">
+        <option value="">Select Year</option>
+        {% for yr in years %}
+        <option value="{{ yr }}">{{ yr }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <!-- Quartile Distribution Graph -->
+  <div class="container py-4">
+    <canvas id="quartileChart" style="max-width: 400px; max-height: 400px;"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('quartileChart').getContext('2d');
+    
+    var quartileData = {
+      labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+      datasets: [{
+        label: 'Publications by Quartile',
+        data: [
+          {% for quartile in quartile_distribution %}
+            {{ quartile.count }},
+          {% endfor %}
+        ],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+      }]
+    };
+
+    var quartileChart = new Chart(ctx, {
+      type: 'pie',
+      data: quartileData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Publications Quartile Distribution'
+          },
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                return tooltipItem.label + ': ' + tooltipItem.raw;
+              }
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+
+{% endblock EDGE-AI %}

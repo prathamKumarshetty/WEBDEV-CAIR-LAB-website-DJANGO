@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Approve Users</title>
+</head>
+<body>
+    <h2>Pending Users</h2>
+    <ul>
+        {% for user in pending_users %}
+            <li>{{ user.username }} - {{ user.email }}
+                <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <button type="submit">Approve</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

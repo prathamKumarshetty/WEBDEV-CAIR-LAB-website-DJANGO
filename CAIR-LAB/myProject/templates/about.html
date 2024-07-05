@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAIR LAB | KLETCH University</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background-color: #f0f0f0;
+        }
+        .navbar {
+            background-color: #ffffff; /* White background for navbar */
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .navbar-nav .nav-link {
+            color: #343a40; /* Dark text color for navbar links */
+        }
+        .navbar-nav .dropdown-menu {
+            background-color: rgba(255, 255, 255, 0.9); /* White background for dropdown */
+            backdrop-filter: blur(10px);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .dropdown-item img {
+            height: 20px;
+            width: 20px;
+            margin-right: 10px;
+        }
+        .about-section {
+            padding: 60px 0;
+            background-color: #e9ecef;
+        }
+        .about-section h1, .about-section h2, .about-section p {
+            color: #343a40;
+        }
+        .about-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .faculty-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .faculty-card {
+            text-align: center;
+            width: 200px;
+        }
+        .faculty-card img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .faculty-card h2 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #343a40;
+        }
+        .team {
+            margin-top: 60px;
+        }
+        .team-header {
+            margin-bottom: 40px; /* Add margin to increase gap */
+        }
+        .team-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .teammate {
+            text-align: center;
+            margin-bottom: 15px; /* Reduced margin */
+        }
+        .teammate img {
+            border-radius: 50%;
+            width: 100px; /* Smaller size */
+            height: 100px; /* Smaller size */
+            object-fit: cover;
+            margin-bottom: 10px; /* Reduced margin */
+        }
+        .teammate h3 {
+            font-size: 16px; /* Slightly smaller font size */
+            margin-bottom: 5px; /* Reduced margin */
+            color: #343a40;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">
+                <img src="{% static 'photos/logo1.png' %}" alt="Logo"> 
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Research Domain
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/AIML"><img src="{% static 'photos/EdgeAI.jpeg' %}" alt="EDGE-AI Logo"> EDGE-AI</a></li>
+                            <li><a class="dropdown-item" href="/HPC"><img src="{% static 'photos/hpcnew.png' %}" alt="HPC Logo"> HPC</a></li>
+                            <li><a class="dropdown-item" href="/CLOUD"><img src="{% static 'photos/cloud.jpeg' %}" alt="CLOUD Logo"> CLOUD</a></li>
+                            <li><a class="dropdown-item" href="/DATASCIENCE"><img src="{% static 'photos/datasciencenew.png' %}" alt="DATA SCIENCE Logo"> DATA SCIENCE</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/FacultyLogin">Faculty Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    {% if messages %}  
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    
+    <!-- Main Content -->
+    <div class="container mt-4">
+    
+    <!-- About Section -->
+    <div class="container about-section">
+        <div class="about-header">
+            <h1>About CAIR Lab</h1>
+            <p>The Centre for Artificial Intelligence Research (CAIR) at KLE Technological University is dedicated to advancing the field of AI through innovative research and cutting-edge technology. Our mission is to foster a collaborative environment where students, researchers, and faculty can work together to solve complex problems and drive technological progress.</p>
+        </div>
+    
+        <!-- Professors Section -->
+        <div class="faculty-container">
+            {% for faculty in faculty %}
+            <div class="faculty-card">
+                {% if faculty.Faculty_image %}
+                    <img src="{{ faculty.Faculty_image.url }}" alt="{{ faculty.Faculty_name }}">
+                {% else %}
+                    <img src="{% static 'images/default_image.jpg' %}" alt="{{ faculty.Faculty_name }}">
+                {% endif %}
+                <h2>{{ faculty.Faculty_name }}</h2>
+            </div>
+            {% endfor %}
+        </div>
+    
+        <!-- Development Team Section -->
+        <div class="team mt-5">
+            <h2 class="text-center team-header">Meet Our Development Team</h2>
+            <div class="team-container">
+                <div class="teammate">
+                    <img src="{% static 'photos/shreyas.png' %}" alt="Shreyas Dabade">
+                    <h3>Shreyas Dabade</h3>
+                </div>
+                <div class="teammate">
+                    <img src="{% static 'photos/shetty.png' %}" alt="Prathamkumar Shetty">
+                    <h3>Prathamkumar Shetty</h3>
+                </div>
+                <div class="teammate">
+                    <img src="{% static 'photos/sheldon.png' %}" alt="Sheldon Rodrigues">
+                    <h3>Sheldon Rodrigues</h3>
+                </div>
+                <div class="teammate">
+                    <img src="{% static 'photos/sameer.png' %}" alt="Sameer Nadaf">
+                    <h3>Sameer Nadaf</h3>
+                </div>
+                <div class="teammate">
+                    <img src="{% static 'photos/aadesh.png' %}" alt="Aadesh Bafana">
+                    <h3>Aadesh Bafana</h3>
+                </div>
+                <div class="teammate">
+                    <img src="{% static 'photos/khushi.png' %}" alt="Khushi Habib">
+                    <h3>Khushi Habib</h3>
+                </div>
+                <div class="teammate">
+                    <img src="{% static 'photos/ashlesha.png' %}" alt="Ashlesha Khanapure">
+                    <h3>Ashlesha Khanapure</h3>
+                </div>
+                <div class="teammate">
+                    <img src="{% static 'photos/madnur.png' %}" alt="Pratham Vijay Madnur">
+                    <h3>Pratham Vijay Madnur</h3>
+                </div>
+            </div>
+            <p class="text-center mt-4">Together, the development team has created a robust and visually appealing platform for the CAIR Lab, ensuring that all information is easily accessible and well-presented.</p>
+        </div>
+    </div>
+    
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/particles.min.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    <script>
+        particlesJS.load('particles-js', '{% static "js/particles.json" %}', function() {
+            console.log('particles.js loaded - callback');
+        });
+    </script>
+</body>
+</html>

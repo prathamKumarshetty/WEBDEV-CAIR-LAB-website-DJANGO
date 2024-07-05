@@ -1,0 +1,47 @@
+{% extends "AIML.html" %}
+{% load static %}
+{% block EDGE-AI %}
+
+<div class="container py-4">
+  <!-- Search Form -->
+  <form class="mb-4">
+    <div class="input-group">
+      <input type="text" name="query" class="form-control" placeholder="Search problem statements or student names">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <!-- Results Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Problem Statement</th>
+          <th>Student Names</th>
+          <th>Paper Link</th>
+          <th>Code Link</th>
+          <th>Faculty Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in results %}
+        <tr>
+          <td>{{ result.problem_statement }}</td>
+          <td>
+            <ul>
+              {% for student in result.students.all %}
+              <li>{{ student.name }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td><a href="{{ result.paper_link }}" target="_blank">Paper</a></td>
+          <td><a href="{{ result.code_link }}" target="_blank">Code</a></td>
+          <td>{{ result.faculty.Faculty_name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock EDGE-AI %}

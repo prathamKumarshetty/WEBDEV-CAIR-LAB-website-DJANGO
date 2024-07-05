@@ -1,0 +1,159 @@
+{% extends "faculty_home.html" %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="tel"] {
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            width: 100%;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus {
+            border-color: #0056b3;
+        }
+        .btn-primary {
+            background-color: #0056b3;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #003d7a;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h2>Faculty Registration</h2>
+                <form id="registrationForm" method="post" action="{% url 'FacultyRegister' %}">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="form-group">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                        <div class="help-text">Example: john_doe</div>
+                        <div id="usernameError" class="error">{{ form.username.errors }}</div>
+                    </div>
+                    <div class="form-group">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                        <div class="help-text">Example: john.doe@example.com</div>
+                        <div id="emailError" class="error">{{ form.email.errors }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number:</label>
+                        <input type="tel" name="phone" id="phone">
+                        <div class="help-text">Example: 1234567890</div>
+                        <div id="phoneError" class="error"></div>
+                    </div>
+                    <div class="form-group">
+                        {{ form.password1.label_tag }}
+                        {{ form.password1 }}
+                        <div class="help-text">Example: Use a strong password</div>
+                        <div class="error">{{ form.password1.errors }}</div>
+                    </div>
+                    <div class="form-group">
+                        {{ form.password2.label_tag }}
+                        {{ form.password2 }}
+                        <div class="help-text">Example: Re-enter the strong password</div>
+                        <div class="error">{{ form.password2.errors }}</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+                <div id="errorMessage" class="error"></div>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            let valid = true;
+            const usernameField = document.querySelector('input[name="username"]');
+            const emailField = document.querySelector('input[name="email"]');
+            const phoneField = document.querySelector('input[name="phone"]');
+
+            // Clear previous error messages
+            document.getElementById('usernameError').textContent = '';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('phoneError').textContent = '';
+            document.getElementById('errorMessage').textContent = '';
+            usernameField.style.borderColor = '#ccc';
+            emailField.style.borderColor = '#ccc';
+            phoneField.style.borderColor = '#ccc';
+
+            // Validate username to ensure it does not contain numbers
+            if (/\d/.test(usernameField.value)) {
+                valid = false;
+                document.getElementById('usernameError').textContent = 'Username cannot contain numbers.';
+                usernameField.style.borderColor = 'red';
+            }
+
+            // Validate email format
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailField.value)) {
+                valid = false;
+                document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+                emailField.style.borderColor = 'red';
+            }
+
+            // Validate phone number format
+            const phonePattern = /^\d{10}$/;
+            if (!phonePattern.test(phoneField.value)) {
+                valid = false;
+                document.getElementById('phoneError').textContent = 'Please enter a valid 10 digit phone number.';
+                phoneField.style.borderColor = 'red';
+            }
+
+            if (!valid) {
+                event.preventDefault(); // Prevent form submission
+                document.getElementById('errorMessage').textContent = 'Please correct the errors and try again.';
+            } else {
+                document.getElementById('errorMessage').textContent = '';
+            }
+        });
+    </script>
+{% endblock %}
