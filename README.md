@@ -31,3 +31,7 @@ Welcome to the CAIR LAB WEBSITE! This project is designed to manage various acad
 - **Database**: SQLite (development), PostgreSQL (production)
 - **Others**: JavaScript, jQuery
 
+## Alignment with SDG 4.3
+
+This project aligns with Sustainable Development Goal 4.3 by promoting inclusive and equitable quality education and lifelong learning opportunities for all. The system facilitates the efficient management of educational resources, supports academic research, and enhances the collaboration between faculty and students.
+
