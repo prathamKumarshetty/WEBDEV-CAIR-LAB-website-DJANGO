@@ -6,14 +6,8 @@ Welcome to the CAIR LAB WEBSITE! This project is designed to manage various acad
 
 - [Features](#features)
 - [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Form Validations](#form-validations)
-- [Project Structure](#project-structure)
 - [Alignment with SDG 4.3](#alignment-with-sdg-43)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+
 
 ## Features
 
@@ -34,4 +28,5 @@ Welcome to the CAIR LAB WEBSITE! This project is designed to manage various acad
 ## Alignment with SDG 4.3
 
 This project aligns with Sustainable Development Goal 4.3 by promoting inclusive and equitable quality education and lifelong learning opportunities for all. The system facilitates the efficient management of educational resources, supports academic research, and enhances the collaboration between faculty and students.
+
 
